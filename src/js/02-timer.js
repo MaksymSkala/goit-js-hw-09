@@ -1,88 +1,66 @@
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 
-// Описаний в документації
 const options = {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    const selectedDate = selectedDates[0];
-    const currentDate = new Date();
-    if (selectedDate <= currentDate) {
+    if (selectedDates[0] <= new Date()) {
       alert("Please choose a date in the future");
+      startButton.disabled = true;
       return;
     }
+
     startButton.disabled = false;
   },
 };
 
-const datePicker = document.querySelector("#datetime-picker");
+const datePicker = flatpickr("#datetime-picker", options);
 const startButton = document.querySelector("[data-start]");
-const timerFields = document.querySelectorAll(".value");
+const daysValue = document.querySelector("[data-days]");
+const hoursValue = document.querySelector("[data-hours]");
+const minutesValue = document.querySelector("[data-minutes]");
+const secondsValue = document.querySelector("[data-seconds]");
 
-flatpickr(datePicker, options);
+startButton.addEventListener("click", () => {
+  startButton.disabled = true;
+  const selectedDate = datePicker.selectedDates[0];
+  const currentDate = new Date();
+  
+  function convertMs(ms) {
+    const second = 1000;
+    const minute = second * 60;
+    const hour = minute * 60;
+    const day = hour * 24;
 
-let countdownInterval;
+    const days = Math.floor(ms / day);
+    const hours = Math.floor((ms % day) / hour);
+    const minutes = Math.floor(((ms % day) % hour) / minute);
+    const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
-function startCountdown(targetDate) {
-  countdownInterval = setInterval(() => {
-    const timeLeft = targetDate - new Date();
-    if (timeLeft <= 0) {
-      clearInterval(countdownInterval);
-      updateTimerDisplay(0);
-      alert("Countdown has finished!");
-      return;
-    }
-    updateTimerDisplay(timeLeft);
-  }, 1000);
-}
-
-function updateTimerDisplay(ms) {
-  const { days, hours, minutes, seconds } = convertMs(ms);
-  timerFields[0].textContent = addLeadingZero(days);
-  timerFields[1].textContent = addLeadingZero(hours);
-  timerFields[2].textContent = addLeadingZero(minutes);
-  timerFields[3].textContent = addLeadingZero(seconds);
-}
-
-function addLeadingZero(value) {
-  return String(value).padStart(2, "0");
-}
-
-function convertMs(ms) {
-    
     return { days, hours, minutes, seconds };
   }
-  
-  startButton.addEventListener('click', function () {
-    const dateInput = document.querySelector('#datetime-picker').value;
-    const selectedDate = new Date(dateInput);
-    const currentDate = new Date();
-  
-    if (selectedDate <= currentDate) {
-        alert(`Please choose a date in the future`);
+
+  function addLeadingZero(value) {
+    return String(value).padStart(2, "0");
+  }
+
+  function updateTimer() {
+    const timeLeft = selectedDate - new Date();
+    if (timeLeft <= 0) {
+      clearInterval(intervalId);
       return;
     }
-  
-    startButton.disabled = true;
-  
-    const intervalId = setInterval(function () {
-      const timeLeft = selectedDate - new Date();
-  
-      if (timeLeft <= 0) {
-        clearInterval(intervalId);
-        timerElements.forEach((element) => (element.textContent = '00'));
-        startButton.disabled = false;
-        return;
-      }
-  
-      const { days, hours, minutes, seconds } = convertMs(timeLeft);
-  
-      daysValue.textContent = addLeadingZero(days);
-      hoursValue.textContent = addLeadingZero(hours);
-      minutesValue.textContent = addLeadingZero(minutes);
-      secondsValue.textContent = addLeadingZero(seconds);
-    }, 1000);
-  });
+    
+    const { days, hours, minutes, seconds } = convertMs(timeLeft);
+    daysValue.textContent = addLeadingZero(days);
+    hoursValue.textContent = addLeadingZero(hours);
+    minutesValue.textContent = addLeadingZero(minutes);
+    secondsValue.textContent = addLeadingZero(seconds);
+  }
+
+  updateTimer();
+  const intervalId = setInterval(updateTimer, 1000);
+});
