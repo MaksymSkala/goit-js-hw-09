@@ -63,14 +63,18 @@ function convertMs(ms) {
   // Конвертування різниці в об'єкт з днями, годинами, хвилинами і секундами
   const timeLeft = convertMs(differenceMs);
 
-startButton.addEventListener("click", () => {
-    const dateInput = document.querySelector('#datetime-picker').value;
+  const dateInput = document.querySelector('#datetime-picker').value;
 
-    // Створення об'єкту Date на основі значення з поля вводу
-    const selectedDate = new Date(dateInput);
-  const selectedDate = datePicker._flatpickr.selectedDates[0];
+  // Створення об'єкту Date на основі значення з поля вводу
+  const selectedDate = new Date(dateInput);
+  
+  // Отримання вибраної дати з flatpickr
+  const datePicker = document.querySelector('#datetime-picker');
+  const selectedDateFromPicker = datePicker._flatpickr.selectedDates[0];
+  
+  // Порівняння обраної дати з поточною датою
   const currentDate = new Date();
-  if (selectedDate <= currentDate) {
+  if (selectedDateFromPicker <= currentDate) {
     alert("Please choose a date in the future");
     return;
   }
