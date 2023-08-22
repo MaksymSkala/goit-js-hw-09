@@ -51,6 +51,18 @@ function addLeadingZero(value) {
   return String(value).padStart(2, "0");
 }
 
+function convertMs(ms) {
+    // Код для конвертації мілісекунд у дні, години, хвилини і секунди
+    // ...
+    return { days, hours, minutes, seconds };
+  }
+  
+  // Отримання різниці між обраною датою та поточною датою
+  const differenceMs = selectedDate.getTime() - currentDate.getTime();
+  
+  // Конвертування різниці в об'єкт з днями, годинами, хвилинами і секундами
+  const timeLeft = convertMs(differenceMs);
+
 startButton.addEventListener("click", () => {
   const selectedDate = datePicker._flatpickr.selectedDates[0];
   const currentDate = new Date();
