@@ -64,6 +64,10 @@ function convertMs(ms) {
   const timeLeft = convertMs(differenceMs);
 
 startButton.addEventListener("click", () => {
+    const dateInput = document.querySelector('#datetime-picker').value;
+
+    // Створення об'єкту Date на основі значення з поля вводу
+    const selectedDate = new Date(dateInput);
   const selectedDate = datePicker._flatpickr.selectedDates[0];
   const currentDate = new Date();
   if (selectedDate <= currentDate) {
