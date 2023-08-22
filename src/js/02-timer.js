@@ -57,27 +57,33 @@ function convertMs(ms) {
     return { days, hours, minutes, seconds };
   }
   
-  // Отримання різниці між обраною датою та поточною датою
-  const differenceMs = selectedDate.getTime() - currentDate.getTime();
+  startButton.addEventListener('click', function () {
+    const dateInput = document.querySelector('#datetime-picker').value;
+    const selectedDate = new Date(dateInput);
+    const currentDate = new Date();
   
-  // Конвертування різниці в об'єкт з днями, годинами, хвилинами і секундами
-  const timeLeft = convertMs(differenceMs);
-
-  const dateInput = document.querySelector('#datetime-picker').value;
-
-  // Створення об'єкту Date на основі значення з поля вводу
-  const selectedDate = new Date(dateInput);
+    if (selectedDate <= currentDate) {
+      alert('Please choose a date in the future');
+      return;
+    }
   
-  // Отримання вибраної дати з flatpickr
-  const datePicker = document.querySelector('#datetime-picker');
-  const selectedDateFromPicker = datePicker._flatpickr.selectedDates[0];
+    startButton.disabled = true;
   
-  // Порівняння обраної дати з поточною датою
-  const currentDate = new Date();
-  if (selectedDateFromPicker <= currentDate) {
-    alert("Please choose a date in the future");
-    return;
-  }
-  startCountdown(selectedDate);
-  startButton.disabled = true;
-});
+    const intervalId = setInterval(function () {
+      const timeLeft = selectedDate - new Date();
+  
+      if (timeLeft <= 0) {
+        clearInterval(intervalId);
+        timerElements.forEach((element) => (element.textContent = '00'));
+        startButton.disabled = false;
+        return;
+      }
+  
+      const { days, hours, minutes, seconds } = convertMs(timeLeft);
+  
+      daysValue.textContent = addLeadingZero(days);
+      hoursValue.textContent = addLeadingZero(hours);
+      minutesValue.textContent = addLeadingZero(minutes);
+      secondsValue.textContent = addLeadingZero(seconds);
+    }, 1000);
+  });
