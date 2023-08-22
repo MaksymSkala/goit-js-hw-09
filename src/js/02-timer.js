@@ -52,8 +52,7 @@ function addLeadingZero(value) {
 }
 
 function convertMs(ms) {
-    // Код для конвертації мілісекунд у дні, години, хвилини і секунди
-    // ...
+    
     return { days, hours, minutes, seconds };
   }
   
