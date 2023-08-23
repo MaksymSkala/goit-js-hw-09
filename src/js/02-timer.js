@@ -8,9 +8,9 @@ const options = {
     minuteIncrement: 1,
     onClose(selectedDates) {
         if (selectedDates[0] <= new Date()) {
-        alert("Please choose a date in the future");
-        startButton.disabled = true;
-        return;
+            alert("Please choose a date in the future");
+            startButton.disabled = true;
+            return;
         }
 
         startButton.disabled = false;
@@ -23,9 +23,21 @@ const daysValue = document.querySelector("[data-days]");
 const hoursValue = document.querySelector("[data-hours]");
 const minutesValue = document.querySelector("[data-minutes]");
 const secondsValue = document.querySelector("[data-seconds]");
+const datetimeInput = document.querySelector("#datetime-picker");
+
+startButton.disabled = true;
+datetimeInput.readOnly = true;
+
+let intervalId;
 
 startButton.addEventListener("click", () => {
+    if (intervalId) {
+        return; // If the timer is already running, don't do anything
+    }
+    
+    datetimeInput.readOnly = true;
     startButton.disabled = true;
+    
     const selectedDate = datePicker.selectedDates[0];
     const currentDate = new Date();
     
@@ -50,8 +62,8 @@ startButton.addEventListener("click", () => {
     function updateTimer() {
         const timeLeft = selectedDate - new Date();
         if (timeLeft <= 0) {
-        clearInterval(intervalId);
-        return;
+            clearInterval(intervalId);
+            return;
         }
     
         const { days, hours, minutes, seconds } = convertMs(timeLeft);
@@ -62,5 +74,5 @@ startButton.addEventListener("click", () => {
     }
 
     updateTimer();
-    const intervalId = setInterval(updateTimer, 1000);
+    intervalId = setInterval(updateTimer, 1000);
 });
